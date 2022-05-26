@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MOVIES</title>
+    <link
+      rel="shortcut icon"
+      href="https://cdn4.vectorstock.com/i/1000x1000/34/43/movie-logo-vector-19783443.jpg"
+      type="image/x-icon"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:wght@300&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background-image: url(https://assets.nflxext.com/ffe/siteui/vlv3/970e664f-2df4-47ce-b4fa-446082f5abc1/ccc3a1f7-2180-4f51-aa75-f9e9196c478b/IN-en-20220523-popsignuptwoweeks-perspective_alpha_website_medium.jpg);
+      }
+
+      #search {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 50px;
+      }
+
+      input,
+      button {
+        font-size: 17px;
+      }
+
+      button {
+        margin-left: 10px;
+        background-color: red;
+        color: white;
+      }
+
+      #container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+        gap: 20px;
+      }
+
+      .box {
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        color: white;
+        font-size: 20px;
+        font-weight: 600;
+        background-color: black;
+        padding: 10px;
+        margin-top: 30px;
+      }
+
+      .text_ {
+        margin: auto;
+        text-align: center;
+        margin-left: 523px;
+        margin-top: 100px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+          rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+          rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        background-color: black;
+        width: 280px;
+        font-size: 30px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="search">
+      <div>
+        <input id="input" type="search" />
+      </div>
+      <div>
+        <button id="button">SEARCH MOVIES</button>
+      </div>
+    </div>
+
+    <div id="container"></div>
+    <div></div>
+  </body>
+</html>
+
+<script>
+  document.querySelector("#button").addEventListener("click", function_search);
+
+  function function_search() {
+    var input = document.querySelector("#input").value;
+
+    console.log(input);
+
+    var url = `https://www.omdbapi.com/?s=${input}&apikey=e09d7c1e`;
+
+    async function movie() {
+      try {
+        var resolve = await fetch(url);
+
+        var resolve_ = await resolve.json();
+
+        displayData(resolve_.Search);
+
+        console.log(resolve_.Search);
+      } catch (error) {
+        console.log("Movie not found");
+
+        var text = document.createElement("img");
+        /*text.innerText = "Movie not found..!!";
+        text.style.color = "white";*/
+        text.setAttribute(
+          "src",
+          "https://media0.giphy.com/media/YyKPbc5OOTSQE/200w.webp?cid=ecf05e47sbn8okg03ngc64nn1ynlgpz3pyjoe93xueci9tv5&rid=200w.webp&ct=g"
+        );
+        text.setAttribute("class", "text_");
+        document.querySelector("#container").append(text);
+      }
+    }
+
+    movie();
+
+    function displayData(data) {
+      document.querySelector("#container").innerHTML = "";
+
+      data.forEach(function (el) {
+        var box = document.createElement("div");
+        box.setAttribute("class", "box");
+        document.querySelector("#container").append(box);
+
+        var Poster = document.createElement("img");
+        Poster.setAttribute("src", el.Poster);
+
+        var Title = document.createElement("p");
+        Title.innerText = el.Title;
+
+        var Type = document.createElement("p");
+        Type.innerText = el.Type;
+
+        var Year = document.createElement("p");
+        Year.innerText = el.Year;
+
+        var imdbID = document.createElement("p");
+        imdbID.innerText = "Imdb id: " + el.imdbID;
+
+        box.append(Poster, Title, Type, Year, imdbID);
+      });
+    }
+  }
+</script>
